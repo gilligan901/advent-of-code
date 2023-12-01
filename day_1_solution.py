@@ -1,4 +1,4 @@
-import day_1_input
+from day_1_input import real_data_2 as input
 
 number_dict = {
   "one": 1,
@@ -36,9 +36,8 @@ def findlastdigit(line):
 
 total = 0
 
-for line in day_1_input.real_data_2.splitlines():
-    digits = findfirstdigit(line)+findlastdigit(line)
-    print(digits)
+for line in input.splitlines():
+    digits = findfirstdigit(line) + findlastdigit(line)
     total += int(digits)
 
 print(total)
