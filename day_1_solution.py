@@ -15,27 +15,24 @@ number_dict = {
 def findfirstdigit(line):
     new_line =''
     for character in line:
-        new_line += character
-
-        for key in number_dict:
-            if new_line.find(key) != -1:
-                new_line = new_line.replace(key, str(number_dict[key]))
-                break
-    for character in new_line:
         if character.isdigit():
             return character
+        
+        new_line += character
+        for key in number_dict:
+            if new_line.find(key) != -1:
+                return str(number_dict[key])
 
 def findlastdigit(line):
     new_line =''
     for character in line[::-1]:
+        if character.isdigit():
+            return character
+         
         new_line = character + new_line
         for key in number_dict:
             if new_line.find(key) != -1:
-                new_line = new_line.replace(key, str(number_dict[key]))
-                break
-    for character in new_line[::-1]:
-        if character.isdigit():
-            return character
+                return str(number_dict[key])
 
 total = 0
 
