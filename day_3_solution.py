@@ -1,6 +1,7 @@
 import re
 
-input = '''............677..........................................................................227.....730..35.......318...........92...166.......
+data = '''
+............677..........................................................................227.....730..35.......318...........92...166.......
 ....%..863..#......................36.............956..337%......692..............*744....$..........*......../.....187..-..................
 ..346...*.....475.440....903&..996*...404+.395...*..............*.......&253.223.....................453..535......@....265.....290$........
 .........470.*.....+..........................*.........148...40....361...................883.............*....%............649.............
@@ -139,51 +140,72 @@ input = '''............677......................................................
 ..250...........817.........#........614...224...164...506......................362....873...........568*....920...............*............
 ......159.................553..294#...*.........*......................42..$...........*......884.......................950...482..611...249
 ........*....978*275.................974...*....81.........../...........%.405.........224.....-....*......409*20....../............*...*...
-.122.273...............759....137...........574............229...................................497.41............................872.78...'''
+.122.273...............759....137...........574............229...................................497.41............................872.78...
+'''
 
-lines = input.splitlines()
-endofline = len(lines[0]) - 1
+
+
+lines = data.splitlines()
+start = ""
 total = 0
 i = 0
-while i < len(lines):
-    line = lines[i]
+for i, line in enumerate(lines):
     j = 0
     while j < len(line):
         char = line[j]
         if char.isdigit():
-            partnumber = ""
-            startindex = j
-            while char.isdigit() and j != endofline:
-                partnumber += char
-                j += 1
-                char = line[j]
-            endindex = j - 1
-            # print(partnumber)
-            if startindex == 0 :
-                startindex = 1
-            if endindex == endofline:
-                endindex = endindex - 1
-
+            if start == "":
+                start = j
             # search above 
-            if i != 0 and bool(re.search(r"[^\w\.]", lines[i - 1][startindex-1:endindex+2])):
-                total += int(partnumber)
-                continue
+            if i != 0:
+                # print(lines[i - 1][j-1:j+2])
+                if bool(re.search(r"[^\w\.\s\n\r]", lines[i - 1][j-1:j+2])):
+                    print("above")
+                    while j < len(line) and line[j].isdigit():
+                        j += 1
+                    partnumber = int(line[start:j])
+                    total += partnumber
+                    print(partnumber)
+                    start = ""
+                    continue
             # search below
-            if i != (len(lines) - 1) and bool(re.search(r"[^\w\.]", lines[i + 1][startindex-1:endindex+2])):
-                total += int(partnumber)
-                print(partnumber)
-                continue
-            # search infront 
-            if startindex != 0 and bool(re.search(r"[^\w\.]", line[startindex - 1])):
-                total += int(partnumber) 
-                print(partnumber)
-                continue
+            if i < len(lines)-1 :
+                # print(lines[i+1][j-1:j+2])
+                if bool(re.search(r"[^\w\.\s\n\r]", lines[i + 1][j-1:j+2])):
+                    print(f"below: {lines[i + 1][j-1:j+2]}")
+                    while j < len(line) and line[j].isdigit():
+                        j += 1
+                    partnumber = int(line[start:j])
+                    total += partnumber
+                    print(partnumber)
+                    start = ""
+                    continue
+             # search infront 
+            if j > 0 :
+                # print(line[j - 1])
+                if bool(re.search(r"[^\w\.\s\n\r]", line[j - 1])):
+                    print(f"infront: {line[j - 1]}")
+                    while j < len(line) and line[j].isdigit():
+                        j += 1
+                    partnumber = int(line[start:j])
+                    total += partnumber
+                    print(partnumber)
+                    start = ""
+                    continue
             # search behind
-            if endindex != endofline and bool(re.search(r"[^\w\.]", line[endindex+1])):
-                total += int(partnumber)
-                print(partnumber)
-                continue
-        j += 1
-    i += 1
-                
+            if j < len(line)-1 :
+                # print(line[j + 1])
+                if bool(re.search(r"[^\w\.\s\n\r]", line[j+1])):
+                    print(f"behind: {line[j+1]}")
+                    while j < len(line) and line[j].isdigit():
+                        j += 1
+                    partnumber = int(line[start:j])
+                    total += partnumber
+                    print(partnumber)
+                    start = ""
+                    continue
+        else:
+            start = ""
+        j+=1
+
 print(total)
